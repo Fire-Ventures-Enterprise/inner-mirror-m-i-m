@@ -16,59 +16,67 @@ app.use('/static/*', serveStatic({ root: './public' }))
 
 // Initialize database tables
 const initDB = async (db: D1Database) => {
-  // Create tables if they don't exist
-  await db.exec(`
-    CREATE TABLE IF NOT EXISTS users (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      first_name TEXT NOT NULL,
-      email TEXT UNIQUE,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      last_login DATETIME DEFAULT CURRENT_TIMESTAMP
-    );
+  try {
+    // Create tables one by one
+    await db.prepare(`
+      CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        first_name TEXT NOT NULL,
+        email TEXT UNIQUE,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        last_login DATETIME DEFAULT CURRENT_TIMESTAMP
+      )
+    `).run();
 
-    CREATE TABLE IF NOT EXISTS daily_prompts (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      prompt_text TEXT NOT NULL,
-      date_assigned DATE UNIQUE NOT NULL,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    );
+    await db.prepare(`
+      CREATE TABLE IF NOT EXISTS daily_prompts (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        prompt_text TEXT NOT NULL,
+        date_assigned DATE UNIQUE NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )
+    `).run();
 
-    CREATE TABLE IF NOT EXISTS journal_entries (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      user_id INTEGER NOT NULL,
-      prompt_id INTEGER,
-      entry_text TEXT NOT NULL,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (user_id) REFERENCES users(id),
-      FOREIGN KEY (prompt_id) REFERENCES daily_prompts(id)
-    );
+    await db.prepare(`
+      CREATE TABLE IF NOT EXISTS journal_entries (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        prompt_id INTEGER,
+        entry_text TEXT NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(id),
+        FOREIGN KEY (prompt_id) REFERENCES daily_prompts(id)
+      )
+    `).run();
 
-    CREATE INDEX IF NOT EXISTS idx_journal_entries_user_id ON journal_entries(user_id);
-    CREATE INDEX IF NOT EXISTS idx_journal_entries_created_at ON journal_entries(created_at);
-    CREATE INDEX IF NOT EXISTS idx_daily_prompts_date ON daily_prompts(date_assigned);
-  `);
+    // Create indexes
+    await db.prepare(`CREATE INDEX IF NOT EXISTS idx_journal_entries_user_id ON journal_entries(user_id)`).run();
+    await db.prepare(`CREATE INDEX IF NOT EXISTS idx_journal_entries_created_at ON journal_entries(created_at)`).run();
+    await db.prepare(`CREATE INDEX IF NOT EXISTS idx_daily_prompts_date ON daily_prompts(date_assigned)`).run();
 
-  // Insert default prompts
-  const today = new Date().toISOString().split('T')[0];
-  const prompts = [
-    'What are you afraid to say out loud today?',
-    'What pattern in your life are you ready to break?',
-    'What would you tell your younger self right now?',
-    'What truth about yourself have you been avoiding?',
-    'What boundaries do you need to set today?',
-    'What are you pretending not to know?',
-    'How are you sabotaging your own growth?'
-  ];
+    // Insert default prompts
+    const prompts = [
+      'What are you afraid to say out loud today?',
+      'What pattern in your life are you ready to break?',
+      'What would you tell your younger self right now?',
+      'What truth about yourself have you been avoiding?',
+      'What boundaries do you need to set today?',
+      'What are you pretending not to know?',
+      'How are you sabotaging your own growth?'
+    ];
 
-  for (let i = 0; i < prompts.length; i++) {
-    const date = new Date();
-    date.setDate(date.getDate() + i);
-    const dateStr = date.toISOString().split('T')[0];
-    
-    await db.prepare(`INSERT OR IGNORE INTO daily_prompts (prompt_text, date_assigned) VALUES (?, ?)`)
-      .bind(prompts[i], dateStr)
-      .run();
+    for (let i = 0; i < prompts.length; i++) {
+      const date = new Date();
+      date.setDate(date.getDate() + i);
+      const dateStr = date.toISOString().split('T')[0];
+      
+      await db.prepare(`INSERT OR IGNORE INTO daily_prompts (prompt_text, date_assigned) VALUES (?, ?)`)
+        .bind(prompts[i], dateStr)
+        .run();
+    }
+  } catch (error) {
+    console.error('Database initialization error:', error);
   }
 };
 
