@@ -1,0 +1,268 @@
+{
+  "daily_prompts": [
+    {
+      "id": 1,
+      "category": "self_awareness",
+      "difficulty": "gentle",
+      "prompt": "What are you grateful for today, {name}?",
+      "theme": "gratitude",
+      "psychological_focus": "positive_psychology"
+    },
+    {
+      "id": 2,
+      "category": "boundaries",
+      "difficulty": "medium",
+      "prompt": "What boundary do you need to set today, {name}?",
+      "theme": "self_protection",
+      "psychological_focus": "assertiveness_training"
+    },
+    {
+      "id": 3,
+      "category": "inner_child",
+      "difficulty": "gentle",
+      "prompt": "What would you tell your younger self right now, {name}?",
+      "theme": "healing",
+      "psychological_focus": "inner_child_work"
+    },
+    {
+      "id": 4,
+      "category": "truth_telling",
+      "difficulty": "challenging",
+      "prompt": "What are you afraid to say out loud today, {name}?",
+      "theme": "authenticity",
+      "psychological_focus": "cognitive_behavioral"
+    },
+    {
+      "id": 5,
+      "category": "patterns",
+      "difficulty": "medium",
+      "prompt": "What pattern in your life are you ready to break, {name}?",
+      "theme": "change",
+      "psychological_focus": "pattern_interruption"
+    },
+    {
+      "id": 6,
+      "category": "relationships",
+      "difficulty": "medium",
+      "prompt": "How did you show up in your relationships today, {name}?",
+      "theme": "connection",
+      "psychological_focus": "attachment_theory"
+    },
+    {
+      "id": 7,
+      "category": "emotions",
+      "difficulty": "gentle",
+      "prompt": "What emotion are you avoiding right now, {name}?",
+      "theme": "emotional_awareness",
+      "psychological_focus": "emotion_regulation"
+    },
+    {
+      "id": 8,
+      "category": "growth",
+      "difficulty": "medium",
+      "prompt": "How are you different today than you were a year ago, {name}?",
+      "theme": "progress",
+      "psychological_focus": "growth_mindset"
+    },
+    {
+      "id": 9,
+      "category": "self_compassion",
+      "difficulty": "gentle",
+      "prompt": "What do you need to forgive yourself for, {name}?",
+      "theme": "healing",
+      "psychological_focus": "self_compassion"
+    },
+    {
+      "id": 10,
+      "category": "desires",
+      "difficulty": "medium",
+      "prompt": "What do you really want, {name}, underneath all the 'shoulds'?",
+      "theme": "authenticity",
+      "psychological_focus": "values_clarification"
+    },
+    {
+      "id": 11,
+      "category": "fear",
+      "difficulty": "challenging",
+      "prompt": "What would you do if you weren't afraid, {name}?",
+      "theme": "courage",
+      "psychological_focus": "exposure_therapy"
+    },
+    {
+      "id": 12,
+      "category": "body_wisdom",
+      "difficulty": "gentle",
+      "prompt": "What is your body trying to tell you today, {name}?",
+      "theme": "somatic_awareness",
+      "psychological_focus": "body_based_therapy"
+    },
+    {
+      "id": 13,
+      "category": "truth_telling",
+      "difficulty": "challenging",
+      "prompt": "What truth about yourself have you been avoiding, {name}?",
+      "theme": "shadow_work",
+      "psychological_focus": "depth_psychology"
+    },
+    {
+      "id": 14,
+      "category": "relationships",
+      "difficulty": "medium",
+      "prompt": "Who in your life needs to hear something from you, {name}?",
+      "theme": "communication",
+      "psychological_focus": "interpersonal_therapy"
+    },
+    {
+      "id": 15,
+      "category": "self_care",
+      "difficulty": "gentle",
+      "prompt": "How can you be kinder to yourself today, {name}?",
+      "theme": "self_nurturing",
+      "psychological_focus": "self_compassion"
+    },
+    {
+      "id": 16,
+      "category": "patterns",
+      "difficulty": "challenging",
+      "prompt": "How are you sabotaging your own growth, {name}?",
+      "theme": "self_sabotage",
+      "psychological_focus": "psychodynamic"
+    },
+    {
+      "id": 17,
+      "category": "dreams",
+      "difficulty": "medium",
+      "prompt": "What dream have you given up on, {name}?",
+      "theme": "aspiration",
+      "psychological_focus": "meaning_making"
+    },
+    {
+      "id": 18,
+      "category": "identity",
+      "difficulty": "medium",
+      "prompt": "Who are you when no one is watching, {name}?",
+      "theme": "authenticity",
+      "psychological_focus": "identity_development"
+    },
+    {
+      "id": 19,
+      "category": "boundaries",
+      "difficulty": "challenging",
+      "prompt": "What are you pretending not to know, {name}?",
+      "theme": "denial",
+      "psychological_focus": "reality_testing"
+    },
+    {
+      "id": 20,
+      "category": "emotions",
+      "difficulty": "medium",
+      "prompt": "What feeling are you most comfortable with, {name}? What does that tell you?",
+      "theme": "emotional_patterns",
+      "psychological_focus": "emotion_regulation"
+    },
+    {
+      "id": 21,
+      "category": "inner_child",
+      "difficulty": "gentle",
+      "prompt": "What did you need to hear as a child that you can give yourself now, {name}?",
+      "theme": "reparenting",
+      "psychological_focus": "inner_child_work"
+    },
+    {
+      "id": 22,
+      "category": "values",
+      "difficulty": "medium",
+      "prompt": "When did you last act against your values, {name}? What happened?",
+      "theme": "integrity",
+      "psychological_focus": "values_clarification"
+    },
+    {
+      "id": 23,
+      "category": "relationships",
+      "difficulty": "challenging",
+      "prompt": "How do you abandon yourself in relationships, {name}?",
+      "theme": "codependency",
+      "psychological_focus": "attachment_theory"
+    },
+    {
+      "id": 24,
+      "category": "growth",
+      "difficulty": "medium",
+      "prompt": "What story about yourself are you ready to rewrite, {name}?",
+      "theme": "narrative_change",
+      "psychological_focus": "narrative_therapy"
+    },
+    {
+      "id": 25,
+      "category": "presence",
+      "difficulty": "gentle",
+      "prompt": "What are you rushing toward, {name}? What are you rushing away from?",
+      "theme": "mindfulness",
+      "psychological_focus": "mindfulness_based"
+    },
+    {
+      "id": 26,
+      "category": "creativity",
+      "difficulty": "gentle",
+      "prompt": "How did you express your creativity today, {name}?",
+      "theme": "self_expression",
+      "psychological_focus": "expressive_therapy"
+    },
+    {
+      "id": 27,
+      "category": "fear",
+      "difficulty": "challenging",
+      "prompt": "What are you most afraid people would think if they really knew you, {name}?",
+      "theme": "shame",
+      "psychological_focus": "shame_resilience"
+    },
+    {
+      "id": 28,
+      "category": "body_wisdom",
+      "difficulty": "medium",
+      "prompt": "Where do you hold tension in your body, {name}? What is it protecting?",
+      "theme": "somatic_awareness",
+      "psychological_focus": "body_based_therapy"
+    },
+    {
+      "id": 29,
+      "category": "truth_telling",
+      "difficulty": "challenging",
+      "prompt": "What conversation are you avoiding, {name}?",
+      "theme": "confrontation",
+      "psychological_focus": "assertiveness_training"
+    },
+    {
+      "id": 30,
+      "category": "self_compassion",
+      "difficulty": "gentle",
+      "prompt": "How would you comfort your best friend if they were feeling what you're feeling, {name}?",
+      "theme": "self_kindness",
+      "psychological_focus": "self_compassion"
+    }
+  ],
+  "categories": {
+    "self_awareness": "Building consciousness about thoughts, feelings, and behaviors",
+    "boundaries": "Learning to protect energy and set healthy limits",
+    "inner_child": "Healing and nurturing the wounded child within",
+    "truth_telling": "Practicing radical honesty and authenticity",
+    "patterns": "Identifying and changing repetitive behaviors",
+    "relationships": "Exploring connection, attachment, and intimacy",
+    "emotions": "Developing emotional intelligence and regulation",
+    "growth": "Fostering personal development and transformation",
+    "self_compassion": "Cultivating kindness and acceptance toward self",
+    "desires": "Connecting with authentic wants and needs",
+    "fear": "Working with anxiety, worry, and avoidance",
+    "body_wisdom": "Tuning into physical sensations and body intelligence",
+    "dreams": "Exploring aspirations, goals, and life vision",
+    "identity": "Understanding core self and personal values",
+    "values": "Clarifying what matters most and living accordingly",
+    "presence": "Practicing mindfulness and present-moment awareness",
+    "creativity": "Expressing authentic self through creative outlets"
+  },
+  "difficulty_levels": {
+    "gentle": "Safe, nurturing prompts for building trust and comfort",
+    "medium": "Moderate depth requiring some vulnerability and reflection", 
+    "challenging": "Deep, potentially triggering prompts requiring emotional courage"
+  }
+}
