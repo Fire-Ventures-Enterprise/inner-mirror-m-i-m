@@ -521,9 +521,49 @@ User context: ${personalContext}
 
 Respond as Lyla in a natural, caring way. Keep responses conversational and under 150 words. Focus on their inner growth and self-awareness.`;
 
-    // Call Mistral API (we'll implement this step by step)
-    // For now, return a personalized response
-    const lylaResponse = `Hi ${firstName}! I'm still learning to hear your voice, but I'm here to listen and reflect back what I see in you. What's on your heart today?`;
+    // Call Mistral API for Lyla's intelligent response
+    let lylaResponse;
+    
+    if (c.env.MISTRAL_API_KEY) {
+      try {
+        const mistralResponse = await fetch('https://api.mistral.ai/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${c.env.MISTRAL_API_KEY}`
+          },
+          body: JSON.stringify({
+            model: 'mistral-medium-latest',
+            messages: [
+              {
+                role: 'system',
+                content: systemPrompt
+              },
+              {
+                role: 'user', 
+                content: message
+              }
+            ],
+            max_tokens: 150,
+            temperature: 0.7
+          })
+        });
+
+        if (mistralResponse.ok) {
+          const data = await mistralResponse.json();
+          lylaResponse = data.choices[0].message.content;
+        } else {
+          throw new Error('Mistral API error');
+        }
+      } catch (error) {
+        console.error('Mistral API failed:', error);
+        // Fallback response
+        lylaResponse = `Hi ${firstName}! I'm having trouble connecting to my AI brain right now, but I'm still here to listen. What's on your mind?`;
+      }
+    } else {
+      // No API key - use fallback
+      lylaResponse = `Hi ${firstName}! I'm still learning to hear your voice, but I'm here to listen and reflect back what I see in you. What's on your heart today?`;
+    }
 
     // Track the voice conversation
     await trackUserAction(c.env.DB, user_id, session_id || generateSessionId(), 'lyla_voice_chat', {
