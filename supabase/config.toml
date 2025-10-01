@@ -1,1 +1,4 @@
 project_id = "ffizietnzdepxlhlzssa"
+
+[functions.chat-with-lyla]
+verify_jwt = false
