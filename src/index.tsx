@@ -204,7 +204,7 @@ const detectMoodPattern = async (db: D1Database, userId: number) => {
 
 // Create user (onboarding)
 app.post('/api/users', async (c) => {
-  const { first_name, email } = await c.req.json();
+  const { first_name, email, onboarding_data } = await c.req.json();
   
   if (!first_name) {
     return c.json({ error: 'First name is required' }, 400);
@@ -218,18 +218,56 @@ app.post('/api/users', async (c) => {
     const userId = result.meta.last_row_id as number;
     const sessionId = generateSessionId();
 
-    // Track user creation
+    // Track comprehensive user creation with onboarding insights
     await trackUserAction(c.env.DB, userId, sessionId, 'user_created', {
       first_name: first_name,
       has_email: !!email,
-      onboarding_completed: true
+      onboarding_completed: true,
+      onboarding_insights: onboarding_data || {}
     }, c.req.raw);
+
+    // Store onboarding data as user patterns for personalization
+    if (onboarding_data) {
+      // Store each piece of onboarding data as patterns for future personalization
+      const patterns = [
+        {
+          type: 'life_stage',
+          data: {
+            stage: onboarding_data.lifeStage,
+            explanation: onboarding_data.lifeStageExplanation,
+            confidence: 1.0
+          }
+        },
+        {
+          type: 'processing_style', 
+          data: {
+            style: onboarding_data.processingStyle,
+            explanation: onboarding_data.processingExplanation,
+            confidence: 1.0
+          }
+        }
+      ];
+
+      for (const pattern of patterns) {
+        if (pattern.data.style || pattern.data.stage) {
+          await c.env.DB.prepare(`
+            INSERT INTO user_patterns (user_id, pattern_type, pattern_data, confidence_score)
+            VALUES (?, ?, ?, ?)
+          `).bind(
+            userId,
+            pattern.type,
+            JSON.stringify(pattern.data),
+            pattern.data.confidence
+          ).run();
+        }
+      }
+    }
 
     return c.json({ 
       id: userId, 
       first_name,
       session_id: sessionId,
-      message: 'Welcome to MIM!' 
+      message: `Welcome to your inner mirror journey, ${first_name}! 🌟`
     });
   } catch (error) {
     return c.json({ error: 'Failed to create user' }, 500);

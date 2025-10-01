@@ -57,73 +57,305 @@ class MIMApp {
   }
 
   showOnboarding() {
+    // Initialize onboarding state
+    this.onboardingStep = 0;
+    this.onboardingData = {};
+    this.showOnboardingStep();
+  }
+
+  showOnboardingStep() {
     const app = document.getElementById('app');
-    app.innerHTML = `
-      <div class="text-center space-y-8">
-        <div class="space-y-4">
-          <h1 class="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-            Welcome to Your Inner Mirror
-          </h1>
-          <p class="text-gray-300 text-lg">
-            A safe space for honest self-reflection and breaking emotional cycles.
-          </p>
-        </div>
-        
-        <div class="bg-gray-800 rounded-lg p-6 space-y-4">
-          <h2 class="text-xl font-semibold">Let's get started</h2>
-          <div>
-            <label for="firstName" class="block text-sm font-medium text-gray-300 mb-2">
-              What should we call you?
-            </label>
-            <input 
-              type="text" 
-              id="firstName" 
-              placeholder="Enter your first name"
-              class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
+    
+    if (this.onboardingStep === 0) {
+      // Lyla Introduction
+      app.innerHTML = `
+        <div class="text-center space-y-8">
+          <div class="space-y-6">
+            <!-- Lyla Avatar/Icon -->
+            <div class="flex justify-center">
+              <div class="w-24 h-24 bg-gradient-to-br from-purple-500 to-blue-600 rounded-full flex items-center justify-center">
+                <span class="text-3xl">🪞</span>
+              </div>
+            </div>
+            
+            <div class="space-y-3">
+              <h1 class="text-3xl font-bold text-white">
+                Hi there! I'm Lyla
+              </h1>
+              <p class="text-xl text-purple-300 font-medium">
+                "Your Inner Mirror"
+              </p>
+              <p class="text-gray-300 text-lg max-w-md mx-auto">
+                Your AI-powered companion for self-discovery and emotional growth
+              </p>
+            </div>
           </div>
-          <div>
-            <label for="email" class="block text-sm font-medium text-gray-300 mb-2">
-              Email (optional)
-            </label>
-            <input 
-              type="email" 
-              id="email" 
-              placeholder="your@email.com"
-              class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          
+          <div class="bg-gray-800 rounded-lg p-6 space-y-6 text-left">
+            <div class="space-y-4">
+              <h3 class="text-lg font-semibold text-purple-300 text-center">What to expect:</h3>
+              <div class="space-y-3">
+                <div class="flex items-start space-x-3">
+                  <span class="text-purple-400 mt-1">💭</span>
+                  <p class="text-gray-300">Daily personalized prompts for deep reflection</p>
+                </div>
+                <div class="flex items-start space-x-3">
+                  <span class="text-blue-400 mt-1">🔍</span>
+                  <p class="text-gray-300">AI insights that understand your unique patterns</p>
+                </div>
+                <div class="flex items-start space-x-3">
+                  <span class="text-green-400 mt-1">🔒</span>
+                  <p class="text-gray-300">Complete privacy - your thoughts stay yours</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="bg-purple-900/30 border border-purple-500/30 rounded-lg p-4">
+              <p class="text-gray-300 text-center italic">
+                "As your Inner Mirror, I'm here to help you see patterns, insights, and truths about yourself that might be hard to see alone. The more you share with me, the clearer your reflection becomes."
+              </p>
+              <p class="text-purple-300 text-center mt-3 font-medium">— Lyla</p>
+            </div>
+            
+            <button 
+              onclick="app.nextOnboardingStep()"
+              class="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium py-3 px-4 rounded-md transition-all duration-200"
             >
+              Nice to meet you, Lyla! Let's begin
+            </button>
           </div>
-          <button 
-            onclick="app.completeOnboarding()"
-            class="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-2 px-4 rounded-md transition-all duration-200"
-          >
-            Begin Your Journey
-          </button>
         </div>
-        
-        <div class="text-sm text-gray-400 space-y-2">
-          <p>🔒 Your entries are private and stored securely</p>
-          <p>💭 Daily prompts to guide your reflection</p>
-          <p>📱 Access your thoughts anytime, anywhere</p>
+      `;
+    } else if (this.onboardingStep === 1) {
+      // Lyla asking for name
+      app.innerHTML = `
+        <div class="space-y-6">
+          <div class="text-center space-y-4">
+            <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-600 rounded-full flex items-center justify-center mx-auto">
+              <span class="text-2xl">🪞</span>
+            </div>
+            <div class="space-y-2">
+              <h2 class="text-2xl font-bold text-white">What should I call you?</h2>
+              <p class="text-gray-400">Let's start with something simple</p>
+            </div>
+          </div>
+          
+          <div class="bg-gray-800 rounded-lg p-6 space-y-6">
+            <div class="bg-purple-900/20 border-l-4 border-purple-500 p-4">
+              <p class="text-gray-300 italic">
+                "I'd love to know your name so I can personalize our conversations. As your Inner Mirror, I want to make this journey feel personal and meaningful to you."
+              </p>
+              <p class="text-purple-300 text-sm mt-2">— Lyla</p>
+            </div>
+            
+            <div class="space-y-4">
+              <div>
+                <label for="firstName" class="block text-sm font-medium text-gray-300 mb-2">
+                  Your first name
+                </label>
+                <input 
+                  type="text" 
+                  id="firstName" 
+                  placeholder="What should I call you?"
+                  class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                >
+              </div>
+              <div>
+                <label for="email" class="block text-sm font-medium text-gray-300 mb-2">
+                  Email (optional - just in case you need to recover your account)
+                </label>
+                <input 
+                  type="email" 
+                  id="email" 
+                  placeholder="your@email.com"
+                  class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                >
+              </div>
+            </div>
+            
+            <div class="flex space-x-3">
+              <button 
+                onclick="app.prevOnboardingStep()"
+                class="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-md transition-all duration-200"
+              >
+                Back to Lyla
+              </button>
+              <button 
+                onclick="app.nextOnboardingStep()"
+                class="flex-1 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all duration-200"
+              >
+                Continue Our Journey
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
-    `;
+      `;
+    } else if (this.onboardingStep === 2) {
+      // Lyla asking about what brings them here
+      const firstName = this.onboardingData.firstName || 'there';
+      app.innerHTML = `
+        <div class="space-y-6">
+          <div class="text-center space-y-4">
+            <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-600 rounded-full flex items-center justify-center mx-auto">
+              <span class="text-2xl">🪞</span>
+            </div>
+            <div class="space-y-2">
+              <h2 class="text-2xl font-bold text-white">Hi ${firstName}! 👋</h2>
+              <p class="text-gray-400">I'm so glad you're here</p>
+            </div>
+          </div>
+          
+          <div class="bg-gray-800 rounded-lg p-6 space-y-6">
+            <div class="bg-purple-900/20 border-l-4 border-purple-500 p-4">
+              <p class="text-gray-300 italic">
+                "As your Inner Mirror, I want to understand what's happening in your life right now. What's drawing you to inner reflection? The more you share with me, the better I can help you see patterns and insights about yourself."
+              </p>
+              <p class="text-purple-300 text-sm mt-2">— Lyla</p>
+            </div>
+            
+            <div class="space-y-4">
+              <h3 class="text-lg font-semibold text-white">What brings you to this inner journey right now?</h3>
+              <div class="space-y-2">
+                ${[
+                  { value: 'emotions', label: 'Understanding my emotions better', desc: 'I want to make sense of what I\'m feeling' },
+                  { value: 'patterns', label: 'Breaking old patterns', desc: 'I notice I keep repeating the same cycles' },
+                  { value: 'clarity', label: 'Finding clarity in decisions', desc: 'I need help seeing situations more clearly' },
+                  { value: 'stress', label: 'Managing stress and overwhelm', desc: 'Life feels too intense right now' },
+                  { value: 'discovery', label: 'General self-discovery', desc: 'I want to understand myself better' },
+                  { value: 'changes', label: 'Processing life changes', desc: 'Something big is shifting in my life' }
+                ].map(option => `
+                  <label class="flex items-start space-x-3 p-3 bg-gray-700 rounded-md hover:bg-gray-600 cursor-pointer transition-colors">
+                    <input type="radio" name="growthFocus" value="${option.value}" class="mt-1 text-purple-600">
+                    <div>
+                      <div class="text-white font-medium">${option.label}</div>
+                      <div class="text-gray-400 text-sm">${option.desc}</div>
+                    </div>
+                  </label>
+                `).join('')}
+              </div>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-2">
+                <span class="text-purple-400">✨</span> Tell me more about this, ${firstName}. What's happening in your life right now? I'd love to understand your specific situation... <span class="text-purple-400">(Required - minimum 75 words)</span>
+              </label>
+              <textarea 
+                id="growthFocusExplanation"
+                placeholder="Share what's really going on for you right now. What experiences, challenges, or feelings brought you here? Be as honest and specific as you feel comfortable - this helps me understand how to best support you..."
+                class="w-full h-32 px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none"
+                oninput="app.updateWordCount('growthFocusExplanation', 'growthFocusWordCount', 75)"
+              ></textarea>
+              <div id="growthFocusWordCount" class="text-sm text-gray-500 mt-1">0/75 words minimum</div>
+            </div>
+            
+            <div class="flex space-x-3">
+              <button 
+                onclick="app.prevOnboardingStep()"
+                class="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-md transition-all duration-200"
+              >
+                Back
+              </button>
+              <button 
+                onclick="app.nextOnboardingStep()"
+                id="nextBtn2"
+                class="flex-1 bg-gray-500 text-gray-300 font-medium py-2 px-4 rounded-md cursor-not-allowed"
+                disabled
+              >
+                Continue with Lyla
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    } else if (this.onboardingStep === 3) {
+      // Completion - start the app
+      this.completeOnboarding();
+    }
+  }
+
+  nextOnboardingStep() {
+    // Validate current step before proceeding
+    if (this.onboardingStep === 1) {
+      const firstName = document.getElementById('firstName').value.trim();
+      if (!firstName) {
+        alert('Please tell Lyla your name so she can personalize your journey!');
+        return;
+      }
+      this.onboardingData.firstName = firstName;
+      this.onboardingData.email = document.getElementById('email').value.trim();
+    } else if (this.onboardingStep === 2) {
+      const growthFocus = document.querySelector('input[name="growthFocus"]:checked')?.value;
+      const explanation = document.getElementById('growthFocusExplanation').value.trim();
+      const wordCount = explanation.split(/\s+/).filter(word => word.length > 0).length;
+      
+      if (!growthFocus) {
+        alert('Please let Lyla know what brings you here by selecting an option');
+        return;
+      }
+      if (wordCount < 75) {
+        alert(`Lyla would love to understand your situation better. Please share at least 75 words about what's happening in your life. Current: ${wordCount} words`);
+        return;
+      }
+      
+      this.onboardingData.growthFocus = growthFocus;
+      this.onboardingData.growthFocusExplanation = explanation;
+    }
+    
+    this.onboardingStep++;
+    
+    if (this.onboardingStep > 3) {
+      this.completeOnboarding();
+    } else {
+      this.showOnboardingStep();
+    }
+  }
+  
+  prevOnboardingStep() {
+    if (this.onboardingStep > 0) {
+      this.onboardingStep--;
+      this.showOnboardingStep();
+    }
+  }
+  
+  updateWordCount(textareaId, counterId, minWords) {
+    const textarea = document.getElementById(textareaId);
+    const counter = document.getElementById(counterId);
+    const nextBtn = document.getElementById(`nextBtn${this.onboardingStep}`);
+    
+    if (!textarea || !counter) return;
+    
+    const text = textarea.value.trim();
+    const wordCount = text.split(/\s+/).filter(word => word.length > 0).length;
+    
+    if (wordCount >= minWords) {
+      counter.textContent = `${wordCount}/${minWords} words ✨ Perfect!`;
+      counter.className = 'text-sm text-purple-400 mt-1';
+      if (nextBtn) {
+        nextBtn.className = 'flex-1 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all duration-200';
+        nextBtn.disabled = false;
+      }
+    } else {
+      counter.textContent = `${wordCount}/${minWords} words minimum - Lyla wants to understand you better`;
+      counter.className = 'text-sm text-gray-500 mt-1';
+      if (nextBtn) {
+        nextBtn.className = 'flex-1 bg-gray-500 text-gray-300 font-medium py-2 px-4 rounded-md cursor-not-allowed';
+        nextBtn.disabled = true;
+      }
+    }
   }
 
   async completeOnboarding() {
-    const firstName = document.getElementById('firstName').value.trim();
-    const email = document.getElementById('email').value.trim();
-
-    if (!firstName) {
-      alert('Please enter your first name');
-      return;
-    }
+    const { firstName, email } = this.onboardingData;
 
     try {
       const response = await fetch('/api/users', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ first_name: firstName, email: email || null })
+        body: JSON.stringify({ 
+          first_name: firstName, 
+          email: email || null,
+          onboarding_data: this.onboardingData
+        })
       });
 
       const result = await response.json();
@@ -133,14 +365,16 @@ class MIMApp {
           id: result.id, 
           first_name: firstName, 
           email,
-          session_id: result.session_id 
+          session_id: result.session_id,
+          onboarding_data: this.onboardingData
         });
         this.sessionId = result.session_id;
         
-        // Track onboarding completion
+        // Track comprehensive onboarding completion
         await this.trackAction('onboarding_completed', {
           first_name: firstName,
-          has_email: !!email
+          has_email: !!email,
+          onboarding_data: this.onboardingData
         });
         
         this.showMainApp();
@@ -166,10 +400,17 @@ class MIMApp {
     
     app.innerHTML = `
       <div class="space-y-6">
-        <!-- Header -->
-        <div class="text-center space-y-2">
-          <h1 class="text-2xl font-bold">Good ${this.getTimeOfDay()}, ${firstName}</h1>
-          <p class="text-gray-400">Ready to look in your inner mirror?</p>
+        <!-- Header with Lyla -->
+        <div class="text-center space-y-4">
+          <div class="flex items-center justify-center space-x-3">
+            <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-600 rounded-full flex items-center justify-center">
+              <span class="text-lg">🪞</span>
+            </div>
+            <div>
+              <h1 class="text-2xl font-bold">Good ${this.getTimeOfDay()}, ${firstName}</h1>
+              <p class="text-gray-400 text-sm">Lyla is here to guide your reflection</p>
+            </div>
+          </div>
         </div>
 
         <!-- Today's Prompt -->
