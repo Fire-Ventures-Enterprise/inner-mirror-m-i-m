@@ -6,8 +6,6 @@
     "dev:sandbox": "wrangler pages dev dist --d1=mim-production --local --ip 0.0.0.0 --port 3000",
     "build": "vite build",
     "build:dev": "vite build --mode development",
-    ...
-
     "preview": "wrangler pages dev dist",
     "deploy": "npm run build && wrangler pages deploy dist --project-name mim-webapp",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings",
