@@ -7,7 +7,15 @@ class MIMApp {
     this.entries = [];
     this.sessionId = this.generateSessionId();
     this.startTime = Date.now();
+    
+    // Voice capabilities
+    this.isListening = false;
+    this.recognition = null;
+    this.synthesis = window.speechSynthesis;
+    this.lylaVoice = null;
+    
     this.init();
+    this.initVoiceCapabilities();
   }
 
   generateSessionId() {
@@ -455,6 +463,38 @@ class MIMApp {
           </button>
         </div>
 
+        <!-- Voice Chat with Lyla -->
+        <div class="bg-gradient-to-r from-purple-900/30 to-blue-900/30 border border-purple-500/30 rounded-lg p-4 space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="text-lg font-medium text-purple-300">💬 Chat with Lyla</h3>
+            <button 
+              id="voiceBtn"
+              onclick="app.isListening ? app.stopListening() : app.startListening()"
+              class="px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-md text-sm transition-colors"
+            >
+              🎙️ Talk to Lyla
+            </button>
+          </div>
+          <div id="voiceIndicator" class="text-sm text-gray-400">💭 Ready to listen</div>
+          
+          <!-- Text input for Lyla (alternative to voice) -->
+          <div class="flex space-x-2">
+            <input 
+              type="text" 
+              id="lylaTextInput"
+              placeholder="Type a message to Lyla..."
+              class="flex-1 px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
+              onkeypress="if(event.key==='Enter') app.sendTextToLyla()"
+            >
+            <button 
+              onclick="app.sendTextToLyla()"
+              class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-md text-sm transition-colors"
+            >
+              Send
+            </button>
+          </div>
+        </div>
+
         <!-- Navigation -->
         <div class="flex space-x-2">
           <button 
@@ -784,6 +824,244 @@ class MIMApp {
         </div>
       </div>
     `).join('');
+  }
+}
+
+  // Voice Capabilities
+  initVoiceCapabilities() {
+    // Initialize Speech Recognition
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      this.recognition = new SpeechRecognition();
+      this.recognition.continuous = false;
+      this.recognition.interimResults = false;
+      this.recognition.lang = 'en-US';
+
+      this.recognition.onstart = () => {
+        this.isListening = true;
+        this.updateVoiceUI('listening');
+      };
+
+      this.recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        this.handleVoiceInput(transcript);
+      };
+
+      this.recognition.onend = () => {
+        this.isListening = false;
+        this.updateVoiceUI('idle');
+      };
+
+      this.recognition.onerror = (event) => {
+        console.error('Speech recognition error:', event.error);
+        this.isListening = false;
+        this.updateVoiceUI('error');
+      };
+    }
+
+    // Initialize Lyla's voice for text-to-speech
+    this.initLylaVoice();
+  }
+
+  initLylaVoice() {
+    if (this.synthesis) {
+      // Wait for voices to load
+      if (speechSynthesis.getVoices().length === 0) {
+        speechSynthesis.addEventListener('voiceschanged', () => {
+          this.selectLylaVoice();
+        });
+      } else {
+        this.selectLylaVoice();
+      }
+    }
+  }
+
+  selectLylaVoice() {
+    const voices = speechSynthesis.getVoices();
+    
+    // Prefer female voices for Lyla
+    this.lylaVoice = voices.find(voice => 
+      voice.name.includes('Samantha') || 
+      voice.name.includes('Karen') || 
+      voice.name.includes('Female') ||
+      (voice.name.includes('Google') && voice.name.includes('en-US'))
+    ) || voices.find(voice => voice.lang.startsWith('en')) || voices[0];
+  }
+
+  startListening() {
+    if (this.recognition && !this.isListening) {
+      this.recognition.start();
+      
+      // Track voice usage
+      this.trackAction('voice_input_started', {
+        feature: 'lyla_conversation'
+      });
+    } else if (!this.recognition) {
+      alert('Voice input is not supported in your browser. Please use Chrome or Edge.');
+    }
+  }
+
+  stopListening() {
+    if (this.recognition && this.isListening) {
+      this.recognition.stop();
+    }
+  }
+
+  async handleVoiceInput(transcript) {
+    console.log('Voice input:', transcript);
+    
+    // Send to Lyla for processing
+    await this.chatWithLyla(transcript, true);
+  }
+
+  async chatWithLyla(message, isVoice = false) {
+    if (!this.currentUser) return;
+
+    try {
+      const response = await fetch('/api/lyla/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_id: this.currentUser.id,
+          message: message,
+          session_id: this.sessionId,
+          voice_enabled: isVoice
+        })
+      });
+
+      const result = await response.json();
+      
+      if (response.ok) {
+        // Display Lyla's response
+        this.displayLylaMessage(result.message);
+        
+        // Speak the response if voice was used
+        if (isVoice && result.message) {
+          this.speakLylaResponse(result.message);
+        }
+        
+        return result;
+      } else {
+        console.error('Lyla chat error:', result.error);
+      }
+    } catch (error) {
+      console.error('Failed to chat with Lyla:', error);
+    }
+  }
+
+  speakLylaResponse(text) {
+    if (this.synthesis && this.lylaVoice) {
+      // Stop any current speech
+      this.synthesis.cancel();
+      
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.voice = this.lylaVoice;
+      utterance.rate = 0.9;
+      utterance.pitch = 1.1;
+      utterance.volume = 0.8;
+
+      utterance.onstart = () => {
+        this.updateVoiceUI('speaking');
+      };
+
+      utterance.onend = () => {
+        this.updateVoiceUI('idle');
+      };
+
+      this.synthesis.speak(utterance);
+    }
+  }
+
+  updateVoiceUI(state) {
+    const voiceBtn = document.getElementById('voiceBtn');
+    const voiceIndicator = document.getElementById('voiceIndicator');
+    
+    if (!voiceBtn || !voiceIndicator) return;
+
+    switch (state) {
+      case 'listening':
+        voiceBtn.innerHTML = '🛑 Stop Listening';
+        voiceBtn.className = 'px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md text-sm transition-colors';
+        voiceIndicator.textContent = '🎤 Listening to you...';
+        voiceIndicator.className = 'text-sm text-red-400';
+        break;
+      case 'speaking':
+        voiceBtn.innerHTML = '🔊 Lyla Speaking';
+        voiceBtn.className = 'px-4 py-2 bg-purple-600 text-white rounded-md text-sm cursor-not-allowed';
+        voiceBtn.disabled = true;
+        voiceIndicator.textContent = '🪞 Lyla is speaking...';
+        voiceIndicator.className = 'text-sm text-purple-400';
+        break;
+      case 'error':
+        voiceIndicator.textContent = '❌ Voice error - try again';
+        voiceIndicator.className = 'text-sm text-red-500';
+        // Fall through to idle state
+      case 'idle':
+      default:
+        voiceBtn.innerHTML = '🎙️ Talk to Lyla';
+        voiceBtn.className = 'px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-md text-sm transition-colors';
+        voiceBtn.disabled = false;
+        voiceIndicator.textContent = '💭 Ready to listen';
+        voiceIndicator.className = 'text-sm text-gray-400';
+        break;
+    }
+  }
+
+  displayLylaMessage(message) {
+    // Create or update Lyla conversation area
+    let lylaChat = document.getElementById('lylaChat');
+    if (!lylaChat) {
+      // Create Lyla chat area if it doesn't exist
+      lylaChat = document.createElement('div');
+      lylaChat.id = 'lylaChat';
+      lylaChat.className = 'bg-purple-900/20 border border-purple-500/30 rounded-lg p-4 mb-4';
+      lylaChat.innerHTML = `
+        <div class="flex items-start space-x-3">
+          <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+            <span class="text-sm">🪞</span>
+          </div>
+          <div class="flex-1">
+            <h4 class="text-purple-300 font-medium mb-2">Lyla, Your Inner Mirror</h4>
+            <div id="lylaChatMessages" class="space-y-2"></div>
+          </div>
+        </div>
+      `;
+      
+      // Insert before the journal entry section
+      const mainApp = document.querySelector('#app > div');
+      const journalSection = document.querySelector('div.bg-gray-800');
+      if (mainApp && journalSection) {
+        mainApp.insertBefore(lylaChat, journalSection);
+      }
+    }
+    
+    // Add the new message
+    const messagesContainer = document.getElementById('lylaChatMessages');
+    if (messagesContainer) {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = 'text-gray-300 italic';
+      messageDiv.textContent = `"${message}"`;
+      messagesContainer.appendChild(messageDiv);
+      
+      // Keep only last 3 messages to avoid clutter
+      const messages = messagesContainer.children;
+      while (messages.length > 3) {
+        messagesContainer.removeChild(messages[0]);
+      }
+    }
+  }
+
+  async sendTextToLyla() {
+    const textInput = document.getElementById('lylaTextInput');
+    const message = textInput.value.trim();
+    
+    if (!message) return;
+    
+    // Clear input
+    textInput.value = '';
+    
+    // Send to Lyla
+    await this.chatWithLyla(message, false);
   }
 }
 

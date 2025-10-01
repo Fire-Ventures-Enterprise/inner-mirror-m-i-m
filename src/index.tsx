@@ -4,6 +4,7 @@ import { serveStatic } from 'hono/cloudflare-workers'
 
 type Bindings = {
   DB: D1Database
+  MISTRAL_API_KEY: string
 }
 
 const app = new Hono<{ Bindings: Bindings }>()
@@ -470,6 +471,74 @@ app.post('/api/track', async (c) => {
     return c.json({ message: 'Action tracked successfully' });
   } catch (error) {
     return c.json({ error: 'Failed to track action' }, 500);
+  }
+});
+
+// Lyla Voice Conversation API
+app.post('/api/lyla/chat', async (c) => {
+  const { user_id, message, session_id, voice_enabled = false } = await c.req.json();
+  
+  if (!user_id || !message) {
+    return c.json({ error: 'User ID and message are required' }, 400);
+  }
+
+  try {
+    // Get user patterns for personalization
+    const patterns = await c.env.DB.prepare(`
+      SELECT pattern_type, pattern_data 
+      FROM user_patterns 
+      WHERE user_id = ?
+    `).bind(user_id).all();
+
+    // Get user info
+    const user = await c.env.DB.prepare(`
+      SELECT first_name FROM users WHERE id = ?
+    `).bind(user_id).first();
+
+    const firstName = user?.first_name || 'there';
+
+    // Build personalized context for Lyla
+    let personalContext = '';
+    if (patterns.results && patterns.results.length > 0) {
+      personalContext = patterns.results.map((p: any) => {
+        const data = JSON.parse(p.pattern_data);
+        return `${p.pattern_type}: ${JSON.stringify(data)}`;
+      }).join('; ');
+    }
+
+    // Lyla's personality prompt
+    const systemPrompt = `You are Lyla, "${firstName}'s Inner Mirror" - a compassionate AI companion for self-discovery and emotional growth. 
+
+Your personality:
+- Warm, insightful, and genuinely caring
+- You reflect back insights and patterns you see
+- You ask thoughtful questions that promote self-reflection  
+- You speak naturally and conversationally
+- You remember what ${firstName} has shared with you
+- You help them see truths about themselves they might miss
+
+User context: ${personalContext}
+
+Respond as Lyla in a natural, caring way. Keep responses conversational and under 150 words. Focus on their inner growth and self-awareness.`;
+
+    // Call Mistral API (we'll implement this step by step)
+    // For now, return a personalized response
+    const lylaResponse = `Hi ${firstName}! I'm still learning to hear your voice, but I'm here to listen and reflect back what I see in you. What's on your heart today?`;
+
+    // Track the voice conversation
+    await trackUserAction(c.env.DB, user_id, session_id || generateSessionId(), 'lyla_voice_chat', {
+      message_length: message.length,
+      voice_enabled: voice_enabled,
+      response_generated: true
+    }, c.req.raw);
+
+    return c.json({ 
+      message: lylaResponse,
+      voice_enabled: voice_enabled,
+      lyla_personality: 'warm_insightful'
+    });
+  } catch (error) {
+    return c.json({ error: 'Failed to chat with Lyla' }, 500);
   }
 });
 
