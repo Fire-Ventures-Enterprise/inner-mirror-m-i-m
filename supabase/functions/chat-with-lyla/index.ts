@@ -1,5 +1,11 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 
+// Type declarations for Deno runtime
+declare const Deno: any;
+declare const Response: any;
+declare const console: any;
+declare function fetch(...args: any[]): Promise<any>;
+
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
