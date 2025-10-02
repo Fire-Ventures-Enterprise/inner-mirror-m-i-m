@@ -1,3 +1,4 @@
+/** @jsxImportSource react */
 import React from 'react';
 import LylaChat from '../components/LylaChat';
 
