@@ -1,4 +1,3 @@
-/** @jsxImportSource react */
 import React, { useState } from 'react';
 import LandingPage from './pages/LandingPage';
 import ChatPage from './pages/ChatPage';
