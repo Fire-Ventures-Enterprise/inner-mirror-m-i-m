@@ -8,8 +8,14 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
+  esbuild: {
+    jsx: 'automatic',
+    jsxImportSource: 'react',
+  },
   plugins: [
-    react(),
+    react({
+      jsxImportSource: 'react',
+    }),
     mode === 'development' && componentTagger(),
   ].filter(Boolean),
   resolve: {
