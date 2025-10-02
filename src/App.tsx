@@ -22,6 +22,8 @@ function App() {
         const path = win.location?.pathname || '/';
         if (path === '/chat') {
           setCurrentPage('chat');
+        } else if (path === '/welcome' || path === '/') {
+          setCurrentPage('landing');
         } else {
           setCurrentPage('landing');
         }
