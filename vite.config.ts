@@ -11,10 +11,18 @@ export default defineConfig(({ mode }) => ({
   esbuild: {
     jsx: 'automatic',
     jsxImportSource: 'react',
+    jsxFactory: 'React.createElement',
+    jsxFragment: 'React.Fragment',
   },
   plugins: [
     react({
       jsxImportSource: 'react',
+      jsxRuntime: 'automatic',
+      babel: {
+        plugins: [
+          ['@babel/plugin-transform-react-jsx', { runtime: 'automatic', importSource: 'react' }]
+        ]
+      }
     }),
     mode === 'development' && componentTagger(),
   ].filter(Boolean),

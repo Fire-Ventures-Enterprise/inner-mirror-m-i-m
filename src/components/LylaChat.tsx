@@ -69,10 +69,10 @@ const LylaChat = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen max-w-4xl mx-auto p-4">
-      <div className="bg-gradient-to-r from-purple-600 to-pink-600 text-white p-6 rounded-t-lg">
-        <h1 className="text-3xl font-bold">My Inner Mirror</h1>
-        <p className="text-lg opacity-90 mt-2">Chat with Lyla, your AI companion for emotional growth</p>
+    <div className="flex flex-col h-[80vh] max-w-4xl mx-auto">
+      <div className="bg-gradient-to-r from-purple-600 to-pink-600 text-white p-6 rounded-t-xl shadow-xl">
+        <h1 className="text-3xl font-bold">Chat with Lyla</h1>
+        <p className="text-lg opacity-90 mt-2">Your AI companion for emotional growth and self-discovery</p>
       </div>
       
       <div className="flex-1 bg-white/10 backdrop-blur-md p-6 overflow-y-auto">
@@ -83,10 +83,10 @@ const LylaChat = () => {
               className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               <div
-                className={`max-w-md px-4 py-3 rounded-lg ${
+                className={`max-w-md px-5 py-3 rounded-2xl shadow-lg ${
                   msg.role === 'user'
-                    ? 'bg-purple-600 text-white'
-                    : 'bg-white/90 text-gray-800'
+                    ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white'
+                    : 'bg-white/95 text-gray-800'
                 }`}
               >
                 {msg.role === 'assistant' && (
@@ -98,7 +98,7 @@ const LylaChat = () => {
           ))}
           {isLoading && (
             <div className="flex justify-start">
-              <div className="bg-white/90 text-gray-800 px-4 py-3 rounded-lg">
+              <div className="bg-white/95 text-gray-800 px-5 py-3 rounded-2xl shadow-lg">
                 <div className="font-semibold text-purple-600 mb-1">Lyla</div>
                 <div className="flex space-x-1">
                   <div className="w-2 h-2 bg-purple-600 rounded-full animate-bounce"></div>
@@ -111,21 +111,21 @@ const LylaChat = () => {
         </div>
       </div>
       
-      <div className="bg-white/10 backdrop-blur-md p-4 rounded-b-lg">
+      <div className="bg-white/10 backdrop-blur-md p-4 rounded-b-xl shadow-xl">
         <div className="flex space-x-2">
           <textarea
             value={inputMessage}
             onChange={(e: any) => setInputMessage(e.target.value)}
             onKeyDown={handleKeyPress}
             placeholder="Share what's on your mind..."
-            className="flex-1 px-4 py-3 rounded-lg bg-white/90 text-gray-800 placeholder-gray-500 resize-none"
+            className="flex-1 px-4 py-3 rounded-xl bg-white/95 text-gray-800 placeholder-gray-500 resize-none shadow-inner focus:outline-none focus:ring-2 focus:ring-purple-500"
             rows={2}
             disabled={isLoading}
           />
           <button
             onClick={sendMessage}
             disabled={isLoading || !inputMessage.trim()}
-            className="px-6 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-semibold hover:from-purple-700 hover:to-pink-700 transition transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
           >
             Send
           </button>
