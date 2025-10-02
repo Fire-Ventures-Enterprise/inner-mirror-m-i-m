@@ -8,22 +8,8 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
-  esbuild: {
-    jsx: 'automatic',
-    jsxImportSource: 'react',
-    jsxFactory: 'React.createElement',
-    jsxFragment: 'React.Fragment',
-  },
   plugins: [
-    react({
-      jsxImportSource: 'react',
-      jsxRuntime: 'automatic',
-      babel: {
-        plugins: [
-          ['@babel/plugin-transform-react-jsx', { runtime: 'automatic', importSource: 'react' }]
-        ]
-      }
-    }),
+    react(),
     mode === 'development' && componentTagger(),
   ].filter(Boolean),
   resolve: {
