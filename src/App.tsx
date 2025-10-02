@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import LandingPage from './pages/LandingPage';
 import ChatPage from './pages/ChatPage';
+import FaceToFacePage from './pages/FaceToFacePage';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('landing');
@@ -21,6 +22,8 @@ function App() {
         const path = win.location?.pathname || '/';
         if (path === '/chat') {
           setCurrentPage('chat');
+        } else if (path === '/face-to-face') {
+          setCurrentPage('faceToFace');
         } else if (path === '/welcome' || path === '/') {
           setCurrentPage('landing');
         } else {
@@ -45,6 +48,7 @@ function App() {
     <>
       {currentPage === 'landing' && <LandingPage />}
       {currentPage === 'chat' && <ChatPage />}
+      {currentPage === 'faceToFace' && <FaceToFacePage />}
     </>
   );
 }

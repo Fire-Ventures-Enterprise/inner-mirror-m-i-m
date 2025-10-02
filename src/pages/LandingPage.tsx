@@ -33,15 +33,21 @@ const LandingPage = () => {
               onClick={() => navigateTo('chat')}
               className="px-8 py-4 bg-white text-purple-900 rounded-full font-semibold text-lg hover:bg-white/90 transition transform hover:scale-105"
             >
-              Start Chatting Free
+              💬 Start Chatting Free
             </button>
-            <a 
-              href="#features"
-              className="px-8 py-4 bg-transparent border-2 border-white text-white rounded-full font-semibold text-lg hover:bg-white/10 transition"
+            <button 
+              onClick={() => navigateTo('faceToFace')}
+              className="px-8 py-4 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-full font-semibold text-lg hover:from-pink-700 hover:to-purple-700 transition transform hover:scale-105"
             >
-              Learn More
-            </a>
+              🎥 Face-to-Face Video
+            </button>
           </div>
+          <a 
+            href="#features"
+            className="text-white/80 hover:text-white transition text-lg"
+          >
+            Learn More ↓
+          </a>
         </div>
 
         {/* Features Grid */}
