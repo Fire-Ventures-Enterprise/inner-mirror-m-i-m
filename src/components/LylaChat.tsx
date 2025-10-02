@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { supabase } from '../integrations/supabase/client';
 
 interface Message {
@@ -61,7 +61,7 @@ const LylaChat = () => {
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  const handleKeyPress = (e: any) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       sendMessage();
@@ -116,12 +116,7 @@ const LylaChat = () => {
           <textarea
             value={inputMessage}
             onChange={(e: any) => setInputMessage(e.target.value)}
-            onKeyDown={(e: any) => {
-              if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage();
-              }
-            }}
+            onKeyDown={handleKeyPress}
             placeholder="Share what's on your mind..."
             className="flex-1 px-4 py-3 rounded-lg bg-white/90 text-gray-800 placeholder-gray-500 resize-none"
             rows={2}
